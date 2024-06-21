@@ -359,7 +359,7 @@ def main():
     fabric_name = "DevNet_Fabric"
     check_status_of = dict()
     check_status_of['fabric_name'] = fabric_name
-    yml_file_path = "devnet_ndfc/ndfc_python/config_data_python.yml"
+    yml_file_path = "config_data_python.yml"
     devnet_nd = NDRESTClientClass(base_uri="https://10.10.20.60", username="admin", pwd="REPLACE_WITH_PASSWORD")
     login=devnet_nd.nd_login()
     if login.status_code != 200:
