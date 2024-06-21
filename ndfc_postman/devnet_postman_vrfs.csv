@@ -1,0 +1,20 @@
+﻿fabric,vrf_name,vrf_id,vrf_desc,vrf_vlan,vrf_vlan_name
+DevNet_Fabric,VRF_POSTMAN_1,52001,vrf red,2201,vlan_2201
+DevNet_Fabric,VRF_POSTMAN_2,52002,vrf red,2202,vlan_2202
+DevNet_Fabric,VRF_POSTMAN_3,52003,vrf red,2203,vlan_2203
+DevNet_Fabric,VRF_POSTMAN_4,52004,vrf red,2204,vlan_2204
+DevNet_Fabric,VRF_POSTMAN_5,52005,vrf red,2205,vlan_2205
+DevNet_Fabric,VRF_POSTMAN_6,52006,vrf red,2206,vlan_2206
+DevNet_Fabric,VRF_POSTMAN_7,52007,vrf red,2207,vlan_2207
+DevNet_Fabric,VRF_POSTMAN_8,52008,vrf red,2208,vlan_2208
+DevNet_Fabric,VRF_POSTMAN_9,52009,vrf red,2209,vlan_2209
+DevNet_Fabric,VRF_POSTMAN_10,52010,vrf red,2210,vlan_2210
+DevNet_Fabric,VRF_POSTMAN_11,52011,vrf red,2211,vlan_2211
+DevNet_Fabric,VRF_POSTMAN_12,52012,vrf red,2212,vlan_2212
+DevNet_Fabric,VRF_POSTMAN_13,52013,vrf red,2213,vlan_2213
+DevNet_Fabric,VRF_POSTMAN_14,52014,vrf red,2214,vlan_2214
+DevNet_Fabric,VRF_POSTMAN_15,52015,vrf red,2215,vlan_2215
+DevNet_Fabric,VRF_POSTMAN_16,52016,vrf red,2216,vlan_2216
+DevNet_Fabric,VRF_POSTMAN_17,52017,vrf red,2217,vlan_2217
+DevNet_Fabric,VRF_POSTMAN_18,52018,vrf red,2218,vlan_2218
+DevNet_Fabric,VRF_POSTMAN_19,52019,vrf red,2219,vlan_2219

@@ -1,0 +1,52 @@
+---
+# Play 1
+- name: VXLAN Fabric Deletion
+  hosts: ndfc_host
+
+  vars_files:
+    - group_vars/fabric_vars.yml
+
+  tasks:
+    - name: Delete Switches on NDFC VXLAN Fabric
+      cisco.dcnm.dcnm_inventory:
+        fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+        state: deleted
+      register: result
+    - name: Result
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+    - name: Delete NDFC VXLAN Fabric
+      cisco.dcnm.dcnm_fabric:
+        state: deleted
+        config:
+          - FABRIC_NAME: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+      register: result
+    - name: Result
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+
+# Play 2
+- name: External Fabric Deletion
+  hosts: ndfc_host
+
+  vars_files:
+    - group_vars/fabric_vars.yml
+
+  tasks:
+    - name: Delete Switches on NDFC External Fabric
+      cisco.dcnm.dcnm_inventory:
+        fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
+        state: deleted
+      register: result
+    - name: Result
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+    - name: Delete NDFC External Fabric
+      cisco.dcnm.dcnm_fabric:
+        state: deleted
+        config:
+          - FABRIC_NAME: "{{ external_fabric_parameters.FABRIC_NAME }}"
+      register: result
+    - name: Result
+      ansible.builtin.debug:
+        msg: "{{ result }}"

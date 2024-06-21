@@ -1,0 +1,101 @@
+---
+vrfs:
+  - fabric: DevNet_Fabric
+    vrfName: VRF_PYTHON_1
+    vrfTemplate: Default_VRF_Universal
+    vrfExtensionTemplate: Default_VRF_Extension_Universal
+    vrfTemplateConfig:
+      vrfName: VRF_PYTHON_1
+      vrfDescription: VRF created by python
+  - fabric: DevNet_Fabric
+    vrfName: VRF_PYTHON_2
+    vrfTemplate: Default_VRF_Universal
+    vrfExtensionTemplate: Default_VRF_Extension_Universal
+    vrfTemplateConfig:
+      vrfName: VRF_PYTHON_2
+      vrfDescription: VRF created by python
+
+networks:
+  - fabric: DevNet_Fabric
+    networkName: NW_PYTHON_1
+    networkTemplate: Default_Network_Universal
+    networkTemplateConfig:
+      gatewayIpAddress: 192.168.1.1/24
+      gatewayIpV6Address: 2001::1/64
+      vlanName: VLAN_NW_1
+      vrfName: VRF_PYTHON_1
+      networkName: NW_PYTHON_1
+      isLayer2Only: false
+      vlanId: 2501
+      tag: 12345
+    vrf: VRF_PYTHON_1
+  - fabric: DevNet_Fabric
+    networkName: NW_PYTHON_2
+    networkTemplate: Default_Network_Universal
+    networkTemplateConfig:
+      gatewayIpAddress: 192.168.2.1/24
+      gatewayIpV6Address: 2002::1/64
+      vlanName: VLAN_NW_2
+      vrfName: VRF_PYTHON_2
+      networkName: NW_PYTHON_2
+      isLayer2Only: false
+      vlanId: 2502
+      tag: 12345
+    vrf: VRF_PYTHON_2
+
+vrf_attachments:
+  - vrfName: VRF_PYTHON_1
+    lanAttachList:
+    - fabric: DevNet_Fabric
+      vrfName: VRF_PYTHON_1
+      serialNumber: leaf1
+      vlan: 2101
+      deployment: true
+    - fabric: DevNet_Fabric
+      vrfName: VRF_PYTHON_1
+      vlan: 2101
+      serialNumber: leaf2
+      deployment: true
+  - vrfName: VRF_PYTHON_2
+    lanAttachList:
+    - fabric: DevNet_Fabric
+      vrfName: VRF_PYTHON_2
+      serialNumber: leaf1
+      vlan: 2102
+      deployment: true
+    - fabric: DevNet_Fabric
+      vrfName: VRF_PYTHON_2
+      serialNumber: leaf2
+      vlan: 2102
+      deployment: true
+
+nw_attachments:
+  - networkName: NW_PYTHON_1
+    lanAttachList:
+    - fabric: DevNet_Fabric
+      networkName: NW_PYTHON_1
+      serialNumber: leaf1
+      switchPorts: Ethernet1/1,Ethernet1/2
+      vlan: 10
+      deployment: true
+    - fabric: DevNet_Fabric
+      networkName: NW_PYTHON_1
+      serialNumber: leaf2
+      switchPorts: ''
+      vlan: 10
+      deployment: true
+  - networkName: NW_PYTHON_2
+    lanAttachList:
+    - fabric: DevNet_Fabric
+      networkName: NW_PYTHON_2
+      serialNumber: leaf1
+      switchPorts: Ethernet1/3
+      vlan: 11
+      deployment: true
+    - fabric: DevNet_Fabric
+      networkName: NW_PYTHON_2
+      serialNumber: leaf2
+      switchPorts: Ethernet1/3
+      vlan: 11
+      deployment: true
+...

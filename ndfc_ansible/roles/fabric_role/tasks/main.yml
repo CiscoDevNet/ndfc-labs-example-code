@@ -1,0 +1,33 @@
+# Note that tasks file inside a role cannot contain a play, But only tasks
+
+# Task 1
+- name: Create VXLAN Fabric
+  cisco.dcnm.dcnm_fabric:
+    state: merged
+    config:
+      - FABRIC_NAME: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+        FABRIC_TYPE: "{{ vxlan_fabric_parameters.FABRIC_TYPE }}"
+        BGP_AS: "{{ vxlan_fabric_parameters.BGP_AS }}"
+        AUTO_SYMMETRIC_VRF_LITE: "{{ vxlan_fabric_parameters.AUTO_SYMMETRIC_VRF_LITE }}"
+        VRF_LITE_AUTOCONFIG: "{{ vxlan_fabric_parameters.VRF_LITE_AUTOCONFIG }}"
+  register: result
+# Task 2
+- name: Create VXLAN Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+
+# Task 3
+- name: Create External Fabric
+  vars:
+    create_external_fabric_payload:
+      BGP_AS: "{{ external_fabric_parameters.BGP_AS }}"
+      IS_READ_ONLY: false
+  cisco.dcnm.dcnm_rest:
+    method: POST
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/External_Fabric"
+    json_data: "{{ create_external_fabric_payload | to_json }}"
+  register: result
+# Task 4
+- name: Create External Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"

@@ -1,0 +1,25 @@
+# Note that tasks file inside a role cannot contain a play, But only tasks
+
+# Task 1
+- name: Add Switches to VXLAN Fabric
+  cisco.dcnm.dcnm_inventory:
+    fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    config: "{{ vxlan_switch_list }}"
+  register: result
+# Task 2
+- name: Add Switches to VXLAN Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+
+# Task 3
+- name: Add Switches to External Fabric
+  cisco.dcnm.dcnm_inventory:
+    fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    config: "{{ external_switch_list }}"
+  register: result
+# Task 2
+- name: Add Switches to External Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"

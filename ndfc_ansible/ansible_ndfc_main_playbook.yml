@@ -1,0 +1,27 @@
+---
+# Play 1
+- name: "Main Play"
+  hosts: ndfc_host
+  vars_files:
+    - group_vars/fabric_vars.yml
+  roles:
+    - role: fabric_role
+      tags:
+        - tag_role_all
+        - tag_role_fabric
+    - role: inventory_role
+      tags:
+        - tag_role_all
+        - tag_role_inventory
+    - role: vpc_role
+      tags:
+        - tag_role_all
+        - tag_role_vpc
+    - role: interface_role
+      tags:
+        - tag_role_all
+        - tag_role_interface
+    - role: overlay_role
+      tags:
+        - tag_role_all
+        - tag_role_overlay

@@ -1,0 +1,181 @@
+---
+########################## Fabric Parameters Variables ##########################
+vxlan_fabric_parameters:
+  FABRIC_NAME: DevNet_Fabric
+  FABRIC_TYPE: VXLAN_EVPN
+  BGP_AS: 65001
+  AUTO_SYMMETRIC_VRF_LITE: true
+  VRF_LITE_AUTOCONFIG: Back2Back&ToExternal
+
+external_fabric_parameters:
+  FABRIC_NAME: External_Fabric
+  BGP_AS: 65010
+
+########################## Fabric Inventory Variables ##########################
+vxlan_switch_list:
+  - seed_ip: 10.10.20.171
+    auth_proto: MD5
+    max_hops: 0
+    role: spine
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
+  - seed_ip: 10.10.20.172
+    auth_proto: MD5
+    max_hops: 0
+    role: spine
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
+  - seed_ip: 10.10.20.173
+    auth_proto: MD5
+    max_hops: 0
+    role: leaf
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
+  - seed_ip: 10.10.20.174
+    auth_proto: MD5
+    max_hops: 0
+    role: leaf
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
+  - seed_ip: 10.10.20.175
+    auth_proto: MD5
+    max_hops: 0
+    role: border
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
+  #- seed_ip: 10.10.20.176
+  #  auth_proto: MD5
+  #  max_hops: 0
+  #  role: leaf
+  #  preserve_config: False
+  #  user_name: admin
+  #  password: C1sco12345
+
+external_switch_list:
+  - seed_ip: 10.10.20.180
+    auth_proto: MD5
+    max_hops: 0
+    role: edge_router
+    preserve_config: True
+    user_name: admin
+    password: C1sco12345
+
+########################## Fabric vPC Variables ##########################
+vxlan_fabric_vpc_pair_list:
+  - peerOneId: 10.10.20.173
+    peerTwoId: 10.10.20.174
+
+########################## Fabric Interface Variables ##########################
+vxlan_vpc_interface_list:
+  - name: vpc30
+    type: vpc
+    switch:
+      - 10.10.20.173
+      - 10.10.20.174
+    profile:
+      admin_state: true
+      mode: trunk
+      peer1_members:
+        - Ethernet1/30
+      peer2_members:
+        - Ethernet1/30
+  - name: vpc31
+    type: vpc
+    switch:
+      - 10.10.20.173
+      - 10.10.20.174
+    profile:
+      admin_state: true
+      mode: trunk
+      peer1_members:
+        - Ethernet1/31
+      peer2_members:
+        - Ethernet1/31
+
+vxlan_ethernet_interface_list:
+  - name: Ethernet1/32
+    type: eth
+    switch:
+      - 10.10.20.173
+      - 10.10.20.174
+      - 10.10.20.175
+      - 10.10.20.176
+    profile:
+      admin_state: true
+      mode: trunk
+      bpdu_guard: false
+      port_type_fast: false
+  - name: Ethernet1/33
+    type: eth
+    switch:
+      - 10.10.20.173
+      - 10.10.20.174
+      - 10.10.20.175
+      - 10.10.20.176
+    profile:
+      admin_state: true
+      mode: trunk
+
+external_loopback_interface_list:
+  - name: lo20
+    type: lo
+    switch:
+      - 10.10.20.180
+    profile:
+      admin_state: true
+      mode: lo
+      route_tag: "12345"
+      int_vrf: VRF_ANS_1
+
+########################## Fabric Overlay Variables ##########################
+vxlan_vrf_list:
+  - vrf_name: VRF_ANS_1
+    vrf_id: 50101
+    vrf_template: Default_VRF_Universal
+    vrf_extension_template: Default_VRF_Extension_Universal
+    vlan_id: 2201
+    service_vrf_template: null
+    attach:
+      - ip_address: 10.10.20.173
+      - ip_address: 10.10.20.174
+  - vrf_name: VRF_ANS_2
+    vrf_id: 50102
+    vrf_template: Default_VRF_Universal
+    vrf_extension_template: Default_VRF_Extension_Universal
+    vlan_id: 2202
+    service_vrf_template: null
+    attach:
+      - ip_address: 10.10.20.173
+      - ip_address: 10.10.20.174
+      - ip_address: 10.10.20.175
+
+vxlan_network_list:
+  - net_name: NW_ANS_1
+    vrf_name: VRF_ANS_1
+    net_template: Default_Network_Universal
+    net_extension_template: Default_Network_Extension_Universal
+    vlan_id: 21
+    gw_ip_subnet: '192.168.1.1/24'
+    attach:
+      - ip_address: 10.10.20.173
+        ports: [Ethernet1/10, Ethernet1/11]
+      - ip_address: 10.10.20.174
+        ports: [Ethernet1/10, Ethernet1/11]
+    deploy: true
+  - net_name: NW_ANS_2
+    vrf_name: VRF_ANS_2
+    net_template: Default_Network_Universal
+    net_extension_template: Default_Network_Extension_Universal
+    vlan_id: 22
+    gw_ip_subnet: '192.168.2.1/24'
+    attach:
+      - ip_address: 10.10.20.173
+        ports: [Ethernet1/12, Ethernet1/13]
+      - ip_address: 10.10.20.174
+        ports: [Ethernet1/12, Ethernet1/13]
+    deploy: true

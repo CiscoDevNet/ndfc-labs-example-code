@@ -1,0 +1,22 @@
+# This role is Work in Progress
+# Task 1
+- name: Recalculate and Deploy i.e. save External Fabric Config
+  cisco.dcnm.dcnm_rest:
+    method: POST
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/config-save"
+  register: result
+# Task 2
+- name: Save External Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+
+# Task 3
+- name: Deploy External Fabric Config
+  cisco.dcnm.dcnm_rest:
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/config-deploy"
+    method: POST
+  register: result
+# Task 4
+- name: Deploy External Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"

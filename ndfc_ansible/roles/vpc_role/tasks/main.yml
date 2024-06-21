@@ -1,0 +1,14 @@
+# Note that tasks file inside a role cannot contain a play, But only tasks
+
+# Task 1
+- name: Add vPC Pairs
+  cisco.dcnm.dcnm_vpc_pair:
+    src_fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    deploy: true
+    config: "{{ vxlan_fabric_vpc_pair_list }}"
+  register: result
+# Task 2
+- name: Add vPC Pairs to VXLAN Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
