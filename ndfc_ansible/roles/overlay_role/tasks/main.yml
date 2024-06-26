@@ -16,7 +16,7 @@
 # Task 3
 - name: Add Networks
   cisco.dcnm.dcnm_network:
-    fabric: DevNet_Fabric
+    fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
     state: merged
     config: "{{ vxlan_network_list }}"
 # Task 4
