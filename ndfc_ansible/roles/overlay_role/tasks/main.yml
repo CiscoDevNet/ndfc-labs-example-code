@@ -19,6 +19,7 @@
     fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
     state: merged
     config: "{{ vxlan_network_list }}"
+  register: result
 # Task 4
 - name: Add Networks to VXLAN Fabric Result
   ansible.builtin.debug:
