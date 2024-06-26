@@ -25,3 +25,11 @@
       tags:
         - tag_role_all
         - tag_role_overlay
+    - role: vrf_lite_ext_role
+      tags:
+        - tag_role_all
+        - tag_role_vrf_lite
+    - role: ext_networks_role
+      tags:
+        - tag_role_all
+        - tag_role_ext_networks

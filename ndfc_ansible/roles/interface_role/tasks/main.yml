@@ -23,3 +23,15 @@
 - name: Set VXLAN Fabric vPC Interfaces Result
   ansible.builtin.debug:
     msg: "{{ result }}"
+
+# Task 5
+- name: Set External Fabric Loopback Interfaces
+  cisco.dcnm.dcnm_interface:
+    fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    config: "{{ external_loopback_interface_list }}"
+  register: result
+# Task 6
+- name: Set External Fabric Loopback Interfaces Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"

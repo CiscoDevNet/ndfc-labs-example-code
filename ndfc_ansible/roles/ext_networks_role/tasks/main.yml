@@ -1,0 +1,33 @@
+# Note that tasks file inside a role cannot contain a play, But only tasks
+
+# Task 1
+- name: Create External Networks Policy
+  cisco.dcnm.dcnm_policy:
+    fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
+    config:
+      - name: bgp_vrf_network
+        create_additional_policy: false
+        priority: 100
+        policy_vars:
+          BGP_AS: 65010
+          VRF_NAME: VRF_ANS_2
+          IP_PREFIX: 10.1.1.1/32
+      - switch:
+          - ip: 10.10.20.180
+  register: result
+# Task 2
+- name: Create External Networks Policy Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+
+# Task 3
+- name: Set External Fabric Loopback Interfaces
+  cisco.dcnm.dcnm_interface:
+    fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    config: "{{ external_loopback_interface_list }}"
+  register: result
+# Task f
+- name: Set External Fabric Loopback Interfaces Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"

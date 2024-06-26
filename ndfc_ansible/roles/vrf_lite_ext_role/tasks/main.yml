@@ -1,22 +1,44 @@
-# This role is Work in Progress
+---
 # Task 1
-- name: Recalculate and Deploy i.e. save External Fabric Config
+- name: Recalculate and Deploy i.e. save VXLAN Fabric Config
   cisco.dcnm.dcnm_rest:
     method: POST
-    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/config-save"
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ vxlan_fabric_parameters.FABRIC_NAME }}/config-save"
   register: result
 # Task 2
-- name: Save External Fabric Result
+- name: Save VXLAN Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+# Task 3
+- name: Deploy all VXLAN Fabric Config
+  cisco.dcnm.dcnm_rest:
+    method: POST
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ vxlan_fabric_parameters.FABRIC_NAME }}/config-deploy"
+  register: result
+# Task 4
+- name: Deploy all VXLAN Fabric Result
   ansible.builtin.debug:
     msg: "{{ result }}"
 
-# Task 3
-- name: Deploy External Fabric Config
-  cisco.dcnm.dcnm_rest:
-    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/config-deploy"
-    method: POST
+# Task 5
+- name: Add VRF Lite Extension on VXLAN Fabric
+  cisco.dcnm.dcnm_vrf:
+    fabric: "{{ vxlan_fabric_parameters.FABRIC_NAME }}"
+    state: merged
+    config: "{{ vxlan_vrf_lite_extension_list }}"
   register: result
-# Task 4
-- name: Deploy External Fabric Result
+# Task 6
+- name: VRF Lite Extension on VXLAN Fabric Result
+  ansible.builtin.debug:
+    msg: "{{ result }}"
+
+# Task 7
+- name: Deploy all External Fabric Config
+  cisco.dcnm.dcnm_rest:
+    method: POST
+    path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/{{ external_fabric_parameters.FABRIC_NAME }}/config-deploy"
+  register: result
+# Task 8
+- name: Deploy all External Fabric Result
   ansible.builtin.debug:
     msg: "{{ result }}"

@@ -104,7 +104,7 @@ vxlan_ethernet_interface_list:
       - 10.10.20.173
       - 10.10.20.174
       - 10.10.20.175
-      - 10.10.20.176
+      #- 10.10.20.176
     profile:
       admin_state: true
       mode: trunk
@@ -116,7 +116,7 @@ vxlan_ethernet_interface_list:
       - 10.10.20.173
       - 10.10.20.174
       - 10.10.20.175
-      - 10.10.20.176
+      #- 10.10.20.176
     profile:
       admin_state: true
       mode: trunk
@@ -129,8 +129,9 @@ external_loopback_interface_list:
     profile:
       admin_state: true
       mode: lo
+      ipv4_addr: 10.1.1.1
       route_tag: "12345"
-      int_vrf: VRF_ANS_1
+      int_vrf: VRF_ANS_2
 
 ########################## Fabric Overlay Variables ##########################
 vxlan_vrf_list:
@@ -152,7 +153,6 @@ vxlan_vrf_list:
     attach:
       - ip_address: 10.10.20.173
       - ip_address: 10.10.20.174
-      - ip_address: 10.10.20.175
 
 vxlan_network_list:
   - net_name: NW_ANS_1
@@ -179,3 +179,17 @@ vxlan_network_list:
       - ip_address: 10.10.20.174
         ports: [Ethernet1/12, Ethernet1/13]
     deploy: true
+
+########################## Fabric VRF Lite Extension Variables ##########################
+vxlan_vrf_lite_extension_list:
+  - vrf_name: VRF_ANS_2
+    vrf_id: 50102
+    vrf_template: Default_VRF_Universal
+    vrf_extension_template: Default_VRF_Extension_Universal
+    vlan_id: 2202
+    service_vrf_template: null
+    attach:
+      - ip_address: 10.10.20.175
+        vrf_lite:
+          - peer_vrf: VRF_ANS_2
+            interface: Ethernet1/1
