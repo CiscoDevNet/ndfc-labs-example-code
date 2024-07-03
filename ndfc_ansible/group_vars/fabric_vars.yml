@@ -48,13 +48,13 @@ vxlan_switch_list:
     preserve_config: False
     user_name: admin
     password: C1sco12345
-  #- seed_ip: 10.10.20.176
-  #  auth_proto: MD5
-  #  max_hops: 0
-  #  role: leaf
-  #  preserve_config: False
-  #  user_name: admin
-  #  password: C1sco12345
+  - seed_ip: 10.10.20.176
+    auth_proto: MD5
+    max_hops: 0
+    role: leaf
+    preserve_config: False
+    user_name: admin
+    password: C1sco12345
 
 external_switch_list:
   - seed_ip: 10.10.20.180
@@ -193,3 +193,17 @@ vxlan_vrf_lite_extension_list:
         vrf_lite:
           - peer_vrf: VRF_ANS_2
             interface: Ethernet1/1
+
+########################## Fabric External Prefixes Variables ##########################
+vxlan_external_networks_list:
+  - vrf_name: vrf_ans_2
+    switch_ip: 10.10.20.180
+    prefixes:
+      - 10.1.1.1/32
+      - 1.1.1.0/24
+      - 2.2.2.0/24
+  - vrf_name: vrf_ans_1
+    switch_ip: 10.10.20.180
+    prefixes:
+      - 20.1.1.1/32
+      - 3.3.3.0/24

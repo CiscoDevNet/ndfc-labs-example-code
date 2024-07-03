@@ -9,25 +9,14 @@
         create_additional_policy: false
         priority: 100
         policy_vars:
-          BGP_AS: 65010
-          VRF_NAME: VRF_ANS_2
-          IP_PREFIX: 10.1.1.1/32
+          BGP_AS: "{{ external_fabric_parameters.BGP_AS }}"
+          VRF_NAME: "{{ item.0.vrf_name }}"
+          IP_PREFIX: "{{ item.1 }}"
       - switch:
-          - ip: 10.10.20.180
+          - ip: "{{ item.0.switch_ip }}"
+  loop: "{{ lookup('subelements', vxlan_external_networks_list, 'prefixes') }}"
   register: result
 # Task 2
 - name: Create External Networks Policy Result
-  ansible.builtin.debug:
-    msg: "{{ result }}"
-
-# Task 3
-- name: Set External Fabric Loopback Interfaces
-  cisco.dcnm.dcnm_interface:
-    fabric: "{{ external_fabric_parameters.FABRIC_NAME }}"
-    state: merged
-    config: "{{ external_loopback_interface_list }}"
-  register: result
-# Task f
-- name: Set External Fabric Loopback Interfaces Result
   ansible.builtin.debug:
     msg: "{{ result }}"
