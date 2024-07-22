@@ -102,6 +102,116 @@
 			]
 		},
 		{
+			"name": "Create Resource",
+			"item": [
+				{
+					"name": "Create VRF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fabric\": \"DevNet_Fabric\",\n  \"vrfName\": \"VRF_POSTMAN\",\n  \"vrfTemplate\": \"Default_VRF_Universal\",\n  \"vrfExtensionTemplate\": \"Default_VRF_Extension_Universal\",\n  \"vrfId\": 51000,\n  \"vrfTemplateConfig\": {\n    \"vrfName\": \"VRF_POSTMAN\",\n    \"vrfSegmentId\": 51000,\n    \"vrfDescription\": \"vrf from postman\",\n    \"vrfVlanId\": 2100,\n    \"vrfVlanName\": \"VRF_POSTMAN_VLAN\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ndfc_hostname}}/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/DevNet_Fabric/vrfs",
+							"protocol": "https",
+							"host": [
+								"{{ndfc_hostname}}"
+							],
+							"path": [
+								"appcenter",
+								"cisco",
+								"ndfc",
+								"api",
+								"v1",
+								"lan-fabric",
+								"rest",
+								"top-down",
+								"v2",
+								"fabrics",
+								"DevNet_Fabric",
+								"vrfs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create VRF Attachment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"vrfName\": \"VRF_POSTMAN\",\n    \"lanAttachList\": [\n      {\n        \"fabric\": \"DevNet_Fabric\",\n        \"vrfName\": \"VRF_POSTMAN\",\n        \"serialNumber\": \"9AY2XFS2QX9\",\n        \"vlan\": 2100,\n        \"deployment\": true\n      },\n      {\n        \"fabric\": \"DevNet_Fabric\",\n        \"vrfName\": \"VRF_POSTMAN\",\n        \"serialNumber\": \"992AKRQRXDC\",\n        \"vlan\": 2100,\n        \"deployment\": true\n      }\n    ]\n  }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ndfc_hostname}}/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/DevNet_Fabric/vrfs/attachments",
+							"protocol": "https",
+							"host": [
+								"{{ndfc_hostname}}"
+							],
+							"path": [
+								"appcenter",
+								"cisco",
+								"ndfc",
+								"api",
+								"v1",
+								"lan-fabric",
+								"rest",
+								"top-down",
+								"v2",
+								"fabrics",
+								"DevNet_Fabric",
+								"vrfs",
+								"attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deploy all config",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{ndfc_hostname}}/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics/DevNet_Fabric/config-deploy",
+							"protocol": "https",
+							"host": [
+								"{{ndfc_hostname}}"
+							],
+							"path": [
+								"appcenter",
+								"cisco",
+								"ndfc",
+								"api",
+								"v1",
+								"lan-fabric",
+								"rest",
+								"control",
+								"fabrics",
+								"DevNet_Fabric",
+								"config-deploy"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Add New Leaf to Fabric",
 			"item": [
 				{
@@ -291,92 +401,6 @@
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Create Resource",
-			"item": [
-				{
-					"name": "Create VRF",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"fabric\": \"DevNet_Fabric\",\n  \"vrfName\": \"VRF_POSTMAN\",\n  \"vrfTemplate\": \"Default_VRF_Universal\",\n  \"vrfExtensionTemplate\": \"Default_VRF_Extension_Universal\",\n  \"vrfId\": 51000,\n  \"vrfTemplateConfig\": {\n    \"vrfName\": \"VRF_POSTMAN\",\n    \"vrfSegmentId\": 51000,\n    \"vrfDescription\": \"vrf from postman\",\n    \"vrfVlanId\": 2100,\n    \"vrfVlanName\": \"VRF_POSTMAN_VLAN\"\n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://{{ndfc_hostname}}/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/DevNet_Fabric/vrfs",
-							"protocol": "https",
-							"host": [
-								"{{ndfc_hostname}}"
-							],
-							"path": [
-								"appcenter",
-								"cisco",
-								"ndfc",
-								"api",
-								"v1",
-								"lan-fabric",
-								"rest",
-								"top-down",
-								"v2",
-								"fabrics",
-								"DevNet_Fabric",
-								"vrfs"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Create Multiple VRFs",
-			"item": [
-				{
-					"name": "Create multiple VRFs",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"fabric\": \"{{fabric}}\",\n  \"vrfName\": \"{{vrf_name}}\",\n  \"vrfTemplate\": \"Default_VRF_Universal\",\n  \"vrfExtensionTemplate\": \"Default_VRF_Extension_Universal\",\n  \"vrfId\": {{vrf_id}},\n  \"vrfTemplateConfig\": {\n    \"vrfName\": \"{{vrf_name}}\",\n    \"vrfSegmentId\": {{vrf_id}},\n    \"vrfDescription\": \"{{vrf_desc}}\",\n    \"vrfVlanId\": {{vrf_vlan}},\n    \"vrfVlanName\": \"{{vrf_vlan_name}}\"\n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://{{ndfc_hostname}}/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/DevNet_Fabric/vrfs",
-							"protocol": "https",
-							"host": [
-								"{{ndfc_hostname}}"
-							],
-							"path": [
-								"appcenter",
-								"cisco",
-								"ndfc",
-								"api",
-								"v1",
-								"lan-fabric",
-								"rest",
-								"top-down",
-								"v2",
-								"fabrics",
-								"DevNet_Fabric",
-								"vrfs"
-							]
-						}
-					},
-					"response": []
-				}
-			]
 		}
 	],
 	"event": [
@@ -404,7 +428,7 @@
 	"variable": [
 		{
 			"key": "ndfc_username",
-			"value": "",
+			"value": "admin",
 			"type": "string"
 		},
 		{
@@ -414,7 +438,7 @@
 		},
 		{
 			"key": "ndfc_hostname",
-			"value": "",
+			"value": "10.10.20.60",
 			"type": "string"
 		},
 		{
