@@ -1,6 +1,5 @@
 import requests
 import json
-#pip install pyyaml
 import yaml
 import urllib3
 import sys
@@ -58,22 +57,32 @@ class VRFConfigurationClass:
         self.vrfExtensionTemplate = vrfExtensionTemplate
         self.vrfTemplateConfig = vrfTemplateConfig
 
+    def to_dict(self):
+        return {
+            "fabric": self.fabric,
+            "vrfName": self.vrfName,
+            "vrfTemplate": self.vrfTemplate,
+            "vrfExtensionTemplate": self.vrfExtensionTemplate,
+            "vrfTemplateConfig": self.vrfTemplateConfig
+        }
+
     @classmethod
     def from_dict(cls,data):
         vrf_obj = cls(**data)
         return vrf_obj
     
     @staticmethod
-    def read_vrfs_from_yml(file_path):
-        with open(file_path, "r") as yml_file:
-            file_data = yaml.safe_load(yml_file)
-            vrf_list = file_data.get("vrfs", [])
+    def build_vrfs(data_from_file):
+        vrf_list = data_from_file.get("vrfs", [])
+        if not vrf_list:
+            print ("No VRFs found in yml file. Exiting...")
+            sys.exit()
         return [VRFConfigurationClass.from_dict(single_vrf) for single_vrf in vrf_list]
     
     @staticmethod
     def create_vrf_on_ndfc(vrf_list, nd_rest_client, fabric_name):
         for vrf in vrf_list:
-            vrf_dict = vrf.__dict__
+            vrf_dict = vrf.to_dict()
             rest_resp = nd_rest_client.nd_rest_req(api_endpoint_uri=f"/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/{fabric_name}/vrfs", payload_data=vrf_dict, method="POST")
             if rest_resp.status_code == 200:
                 print("#####################################################")
@@ -89,16 +98,23 @@ class VRFAttachmentClass:
         self.vrfName = vrfName
         self.lanAttachList = lanAttachList
 
+    def to_dict(self):
+        return {
+            "vrfName": self.vrfName,
+            "lanAttachList": self.lanAttachList
+        }
+    
     @classmethod
     def from_dict(cls,data):
         vrf_attach_obj = cls(**data)
         return vrf_attach_obj
     
     @staticmethod
-    def read_vrf_attachments_from_yml(file_path):
-        with open(file_path, "r") as yml_file:
-            file_data = yaml.safe_load(yml_file)
-            vrf_attachments = file_data.get("vrf_attachments", [])
+    def build_vrf_attachments(data_from_file):
+        vrf_attachments = data_from_file.get("vrf_attachments", [])
+        if not vrf_attachments:
+            print ("No VRF attachments found in yml file. Exiting...")
+            sys.exit()
         return [VRFAttachmentClass.from_dict(vrf_attachment) for vrf_attachment in vrf_attachments]
     
     @staticmethod
@@ -115,7 +131,7 @@ class VRFAttachmentClass:
         attach_list = []
         #convert vrf attachments from class object to dictionary
         for vrf_attachment in vrf_attachments:
-            attach_list.append(vrf_attachment.__dict__)
+            attach_list.append(vrf_attachment.to_dict())
         #Send REST POST request to create the attachments on NDFC fabric switches
         rest_resp = nd_rest_client.nd_rest_req(api_endpoint_uri=f"/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/{fabric_name}/vrfs/attachments", payload_data=attach_list, method="POST")
         if rest_resp.status_code == 200:
@@ -160,22 +176,31 @@ class NetworkConfigurationClass:
         self.networkTemplateConfig = networkTemplateConfig
         self.networkTemplate = networkTemplate
 
+    def to_dict(self):
+        return {
+            "fabric": self.fabric,
+            "vrf": self.vrf,
+            "networkName": self.networkName,
+            "networkTemplateConfig": self.networkTemplateConfig,
+            "networkTemplate": self.networkTemplate
+        }
     @classmethod
     def from_dict(cls,data):
         nw_obj = cls(**data)
         return nw_obj
     
     @staticmethod
-    def read_nws_from_yml(file_path):
-        with open(file_path, "r") as yml_file:
-            file_data = yaml.safe_load(yml_file)
-            nw_list = file_data.get("networks",[])
+    def build_nws(data_from_file):
+        nw_list = data_from_file.get("networks",[])
+        if not nw_list:
+            print ("No Networks found in yml file. Exiting...")
+            sys.exit()
         return [NetworkConfigurationClass.from_dict(single_nw) for single_nw in nw_list]
     
     @staticmethod
     def create_nw_on_ndfc(nw_list, nd_rest_client, fabric_name):
         for nw in nw_list:
-            nw_dict = nw.__dict__
+            nw_dict = nw.to_dict()
             #old /appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/fabrics/{fabric_name}/networks
             rest_resp = nd_rest_client.nd_rest_req(api_endpoint_uri=f"/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/{fabric_name}/networks", payload_data=nw_dict, method="POST")
             if rest_resp.status_code == 200:
@@ -191,16 +216,23 @@ class NetworkAttachmentClass:
         self.networkName = networkName
         self.lanAttachList = lanAttachList
     
+    def to_dict(self):
+        return {
+            "networkName": self.networkName,
+            "lanAttachList": self.lanAttachList
+        }
+    
     @classmethod
     def from_dict(cls,data):
         nw_attach_obj = cls(**data)
         return nw_attach_obj
 
     @staticmethod
-    def read_nw_attachments_from_yml(file_path):
-        with open(file_path, "r") as yml_file:
-            file_data = yaml.safe_load(yml_file)
-            nw_attachments = file_data.get("nw_attachments", [])
+    def build_nw_attachments(data_from_file):
+        nw_attachments = data_from_file.get("nw_attachments", [])
+        if not nw_attachments:
+            print ("No Networks attachments found in yml file. Exiting...")
+            sys.exit()
         return [NetworkAttachmentClass.from_dict(nw_attachment) for nw_attachment in nw_attachments]
     
     @staticmethod
@@ -217,7 +249,7 @@ class NetworkAttachmentClass:
         attach_list = []
         #convert vrf attachments from class object to dictionary
         for nw_attachment in nw_attachments:
-            attach_list.append(nw_attachment.__dict__)
+            attach_list.append(nw_attachment.to_dict())
         #Send REST POST request to create the attachments on NDFC fabric switches
         rest_resp = nd_rest_client.nd_rest_req(api_endpoint_uri=f"/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/top-down/v2/fabrics/{fabric_name}/networks/attachments", payload_data=attach_list, method="POST")
         if rest_resp.status_code == 200:
@@ -286,6 +318,11 @@ def check_user_input(message: str):
     if option.lower() in ('e','exit'):
         print("Exiting as requested by user")
         sys.exit()
+
+def read_from_yml(file_path):
+    with open(file_path, "r") as yml_file:
+        file_data = yaml.safe_load(yml_file)
+    return file_data
 
 def check_status_and_wait(nd_rest_client, check_status_of):
     keys_to_parse = {}
@@ -360,7 +397,10 @@ def main():
     check_status_of = dict()
     check_status_of['fabric_name'] = fabric_name
     yml_file_path = "config_data_python.yml"
+    # Read yml file
+    data_from_file = read_from_yml(yml_file_path)
     devnet_nd = NDRESTClientClass(base_uri="https://10.10.20.60", username="admin", pwd="REPLACE_WITH_PASSWORD")
+    # Login to ND
     login=devnet_nd.nd_login()
     if login.status_code != 200:
         print (f"Login to NDFC failed with status code: {login.status_code}. Error:\n{login.text}")
@@ -369,8 +409,8 @@ def main():
     message = "Proceed with task Create VRFs?"
     select = check_user_input(message)
     if select == 1:
-        #Load list of VRFs from yml file
-        list_of_vrfs = VRFConfigurationClass.read_vrfs_from_yml(yml_file_path)
+        #Load list of VRFs from yml file data
+        list_of_vrfs = VRFConfigurationClass.build_vrfs(data_from_file)
         #Create the VRFs on NDFC fabric one by one
         VRFConfigurationClass.create_vrf_on_ndfc(list_of_vrfs, devnet_nd, fabric_name)
         #Check status:
@@ -382,8 +422,8 @@ def main():
     message = "Proceed with task Create VRFs Attachments?"
     select = check_user_input(message)
     if select == 1:
-        #Load list of VRF attachments from yml file
-        vrf_attachments = VRFAttachmentClass.read_vrf_attachments_from_yml(yml_file_path)
+        #Load list of VRF attachments from yml file data
+        vrf_attachments = VRFAttachmentClass.build_vrf_attachments(data_from_file)
         #Adjust the attachments by replacing switch names with their serial numbers
         VRFAttachmentClass.adjust_vrf_attachments(vrf_attachments, devnet_nd, fabric_name)
         #Create VRF attachments on NDFC fabric
@@ -398,9 +438,6 @@ def main():
         select = check_user_input(message)
         if select == 1:
             #Deploy VRF attachments on NDFC switches
-            vrf_attachments = VRFAttachmentClass.read_vrf_attachments_from_yml(yml_file_path)
-            #Adjust the attachments by replacing switch names with their serial numbers
-            VRFAttachmentClass.adjust_vrf_attachments(vrf_attachments, devnet_nd, fabric_name)
             VRFAttachmentClass.deploy_vrf_attachments_ndfc(vrf_attachments, devnet_nd)
             time.sleep(15)
             #Check status:
@@ -412,8 +449,8 @@ def main():
     message = "Proceed with task Create Networks?"
     select = check_user_input(message)
     if select == 1:
-        #Load list of NWs from yml file
-        list_of_nws = NetworkConfigurationClass.read_nws_from_yml(yml_file_path)
+        #Load list of NWs from yml file data
+        list_of_nws = NetworkConfigurationClass.build_nws(data_from_file)
         #Create the NWs on NDFC fabric one by one
         NetworkConfigurationClass.create_nw_on_ndfc(list_of_nws, devnet_nd, fabric_name)
         #Check status:
@@ -425,8 +462,8 @@ def main():
     message = "Proceed with task Create Network Attachments?"
     select = check_user_input(message)
     if select == 1:
-        #Load list of NW attachments from yml file
-        nw_attachments = NetworkAttachmentClass.read_nw_attachments_from_yml(yml_file_path)
+        #Load list of NW attachments from yml file data
+        nw_attachments = NetworkAttachmentClass.build_nw_attachments(data_from_file)
         #Adjust the NW attachments by replacing switch names with their serial numbers
         NetworkAttachmentClass.adjust_nw_attachments(nw_attachments, devnet_nd, fabric_name)
         #Create Network attachments on NDFC switches
@@ -440,12 +477,9 @@ def main():
         message = "Proceed with task Deploy Networks Attachments?"
         select = check_user_input(message)
         if select == 1:
-            time.sleep(15)
-            nw_attachments = NetworkAttachmentClass.read_nw_attachments_from_yml(yml_file_path)
-            #Adjust the NW attachments by replacing switch names with their serial numbers
-            NetworkAttachmentClass.adjust_nw_attachments(nw_attachments, devnet_nd, fabric_name)
             #Deploy Network attahments on NDFC switches
             NetworkAttachmentClass.deploy_nw_attachments_ndfc(nw_attachments, devnet_nd)
+            time.sleep(15)
             #Check status:
             check_status_of['resource'] = nw_attachments
             check_status_of['resource_type'] = 'network'
