@@ -1,5 +1,4 @@
 import requests
-import json
 import yaml
 import urllib3
 import sys
@@ -8,7 +7,7 @@ import time
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class NDRESTClientClass:
+class NDRESTClient:
 
     def __init__(self, base_uri, username, pwd, login_domain="local", verify=False):
         self.base_uri = base_uri
@@ -71,7 +70,7 @@ class NDRESTClientClass:
         return login_resp
 
 
-class VRFConfigurationClass:
+class VRFConfiguration:
 
     def __init__(
         self, fabric, vrfName, vrfTemplate, vrfExtensionTemplate, vrfTemplateConfig
@@ -102,7 +101,7 @@ class VRFConfigurationClass:
         if not vrf_list:
             print("No VRFs found in yml file. Exiting...")
             sys.exit()
-        return [VRFConfigurationClass.from_dict(single_vrf) for single_vrf in vrf_list]
+        return [VRFConfiguration.from_dict(single_vrf) for single_vrf in vrf_list]
 
     @staticmethod
     def create_vrf_on_ndfc(vrf_list, nd_rest_client, fabric_name):
@@ -124,7 +123,7 @@ class VRFConfigurationClass:
         return
 
 
-class VRFAttachmentClass:
+class VRFAttachment:
 
     def __init__(self, vrfName, lanAttachList):
         self.vrfName = vrfName
@@ -145,7 +144,7 @@ class VRFAttachmentClass:
             print("No VRF attachments found in yml file. Exiting...")
             sys.exit()
         return [
-            VRFAttachmentClass.from_dict(vrf_attachment)
+            VRFAttachment.from_dict(vrf_attachment)
             for vrf_attachment in vrf_attachments
         ]
 
@@ -215,7 +214,7 @@ class VRFAttachmentClass:
         return
 
 
-class NetworkConfigurationClass:
+class NetworkConfiguration:
 
     def __init__(
         self, fabric, vrf, networkName, networkTemplateConfig, networkTemplate
@@ -246,7 +245,7 @@ class NetworkConfigurationClass:
         if not nw_list:
             print("No Networks found in yml file. Exiting...")
             sys.exit()
-        return [NetworkConfigurationClass.from_dict(single_nw) for single_nw in nw_list]
+        return [NetworkConfiguration.from_dict(single_nw) for single_nw in nw_list]
 
     @staticmethod
     def create_nw_on_ndfc(nw_list, nd_rest_client, fabric_name):
@@ -269,7 +268,7 @@ class NetworkConfigurationClass:
         return
 
 
-class NetworkAttachmentClass:
+class NetworkAttachment:
     def __init__(self, networkName, lanAttachList):
         self.networkName = networkName
         self.lanAttachList = lanAttachList
@@ -289,7 +288,7 @@ class NetworkAttachmentClass:
             print("No Networks attachments found in yml file. Exiting...")
             sys.exit()
         return [
-            NetworkAttachmentClass.from_dict(nw_attachment)
+            NetworkAttachment.from_dict(nw_attachment)
             for nw_attachment in nw_attachments
         ]
 
@@ -309,7 +308,7 @@ class NetworkAttachmentClass:
     @staticmethod
     def create_nw_attachment_ndfc(nw_attachments, nd_rest_client, fabric_name):
         attach_list = []
-        # convert vrf attachments from class object to dictionary
+        # convert nw attachments from class object to dictionary
         for nw_attachment in nw_attachments:
             attach_list.append(nw_attachment.to_dict())
         # Send REST POST request to create the attachments on NDFC fabric switches
@@ -507,7 +506,7 @@ def main():
     yml_file_path = "config_data_python.yml"
     # Read yml file
     data_from_file = read_from_yml(yml_file_path)
-    devnet_nd = NDRESTClientClass(
+    devnet_nd = NDRESTClient(
         base_uri="https://10.10.20.60", username="admin", pwd="REPLACE_WITH_PASSWORD"
     )
     # Login to ND
@@ -522,9 +521,9 @@ def main():
     select = check_user_input(message)
     if select == 1:
         # Load list of VRFs from yml file data
-        list_of_vrfs = VRFConfigurationClass.build_vrfs(data_from_file)
+        list_of_vrfs = VRFConfiguration.build_vrfs(data_from_file)
         # Create the VRFs on NDFC fabric one by one
-        VRFConfigurationClass.create_vrf_on_ndfc(list_of_vrfs, devnet_nd, fabric_name)
+        VRFConfiguration.create_vrf_on_ndfc(list_of_vrfs, devnet_nd, fabric_name)
         # Check status:
         check_status_of["resource"] = list_of_vrfs
         check_status_of["resource_type"] = "vrf"
@@ -535,13 +534,13 @@ def main():
     select = check_user_input(message)
     if select == 1:
         # Load list of VRF attachments from yml file data
-        vrf_attachments = VRFAttachmentClass.build_vrf_attachments(data_from_file)
+        vrf_attachments = VRFAttachment.build_vrf_attachments(data_from_file)
         # Adjust the attachments by replacing switch names with their serial numbers
-        VRFAttachmentClass.adjust_vrf_attachments(
+        VRFAttachment.adjust_vrf_attachments(
             vrf_attachments, devnet_nd, fabric_name
         )
         # Create VRF attachments on NDFC fabric
-        VRFAttachmentClass.create_vrf_attachment_ndfc(
+        VRFAttachment.create_vrf_attachment_ndfc(
             vrf_attachments, devnet_nd, fabric_name
         )
         # Check status:
@@ -554,7 +553,7 @@ def main():
         select = check_user_input(message)
         if select == 1:
             # Deploy VRF attachments on NDFC switches
-            VRFAttachmentClass.deploy_vrf_attachments_ndfc(vrf_attachments, devnet_nd)
+            VRFAttachment.deploy_vrf_attachments_ndfc(vrf_attachments, devnet_nd)
             time.sleep(15)
             # Check status:
             check_status_of["resource"] = vrf_attachments
@@ -566,9 +565,9 @@ def main():
     select = check_user_input(message)
     if select == 1:
         # Load list of NWs from yml file data
-        list_of_nws = NetworkConfigurationClass.build_nws(data_from_file)
+        list_of_nws = NetworkConfiguration.build_nws(data_from_file)
         # Create the NWs on NDFC fabric one by one
-        NetworkConfigurationClass.create_nw_on_ndfc(list_of_nws, devnet_nd, fabric_name)
+        NetworkConfiguration.create_nw_on_ndfc(list_of_nws, devnet_nd, fabric_name)
         # Check status:
         check_status_of["resource"] = list_of_nws
         check_status_of["resource_type"] = "network"
@@ -579,13 +578,13 @@ def main():
     select = check_user_input(message)
     if select == 1:
         # Load list of NW attachments from yml file data
-        nw_attachments = NetworkAttachmentClass.build_nw_attachments(data_from_file)
+        nw_attachments = NetworkAttachment.build_nw_attachments(data_from_file)
         # Adjust the NW attachments by replacing switch names with their serial numbers
-        NetworkAttachmentClass.adjust_nw_attachments(
+        NetworkAttachment.adjust_nw_attachments(
             nw_attachments, devnet_nd, fabric_name
         )
         # Create Network attachments on NDFC switches
-        NetworkAttachmentClass.create_nw_attachment_ndfc(
+        NetworkAttachment.create_nw_attachment_ndfc(
             nw_attachments, devnet_nd, fabric_name
         )
         # Check status:
@@ -598,7 +597,7 @@ def main():
         select = check_user_input(message)
         if select == 1:
             # Deploy Network attahments on NDFC switches
-            NetworkAttachmentClass.deploy_nw_attachments_ndfc(nw_attachments, devnet_nd)
+            NetworkAttachment.deploy_nw_attachments_ndfc(nw_attachments, devnet_nd)
             time.sleep(15)
             # Check status:
             check_status_of["resource"] = nw_attachments
