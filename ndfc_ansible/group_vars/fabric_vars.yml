@@ -6,6 +6,8 @@ vxlan_fabric_parameters:
   BGP_AS: 65001
   AUTO_SYMMETRIC_VRF_LITE: true
   VRF_LITE_AUTOCONFIG: Back2Back&ToExternal
+  GRFIELD_DEBUG_FLAG: Enable
+  AAA_REMOTE_IP_ENABLED: False
 
 external_fabric_parameters:
   FABRIC_NAME: External_Fabric

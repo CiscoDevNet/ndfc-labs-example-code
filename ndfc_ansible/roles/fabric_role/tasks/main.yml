@@ -10,6 +10,8 @@
         BGP_AS: "{{ vxlan_fabric_parameters.BGP_AS }}"
         AUTO_SYMMETRIC_VRF_LITE: "{{ vxlan_fabric_parameters.AUTO_SYMMETRIC_VRF_LITE }}"
         VRF_LITE_AUTOCONFIG: "{{ vxlan_fabric_parameters.VRF_LITE_AUTOCONFIG }}"
+        GRFIELD_DEBUG_FLAG: "{{ vxlan_fabric_parameters.GRFIELD_DEBUG_FLAG }}"
+        AAA_REMOTE_IP_ENABLED: "{{ vxlan_fabric_parameters.AAA_REMOTE_IP_ENABLED }}"
   register: result
 # Task 2
 - name: Create VXLAN Fabric Result
